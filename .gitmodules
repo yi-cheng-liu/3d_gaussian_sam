@@ -1,0 +1,6 @@
+[submodule "3d_gaussian"]
+	path = 3d_gaussian
+	url = https://github.com/yi-cheng-liu/3d_gaussian.git
+[submodule "segment-anything"]
+	path = segment-anything
+	url = https://github.com/yi-cheng-liu/segment-anything.git
