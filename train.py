@@ -83,7 +83,10 @@ image_files = sorted(os.listdir(source))
 
 previous_selected_point = []
 
-for image_file in image_files:
+start_time = time.time()
+
+for i, image_file in enumerate(tqdm(image_files)):
+    image_file = image_files[i]
     # get image path in order and read image
     image_path = os.path.join(source, image_file)
     image = cv2.imread(image_path)
@@ -138,14 +141,13 @@ for image_file in image_files:
         result_image = Image.alpha_composite(original_image.convert('RGBA'), overlay_image)
 
         # Define the path where you want to save the image, including the filename and extension
-        output_path = f"Dataset/segmented/{image_file[:8]}.JPG"
+        output_path = f"Dataset/kitchen_segmented/images/{image_file[:8]}.JPG"
 
         # Save the result image in the specified path
         result_image.convert("RGB").save(output_path)
         first_image = False
     
     else:
-        start_time = time.time()
         predictor.set_image(image)
         input_points = previous_selected_point
         input_labels = np.array([1, 1])
@@ -156,7 +158,6 @@ for image_file in image_files:
             point_labels=input_labels,
             multimask_output=False,
         )
-        print(time.time() - start_time)
 
         mask_array = np.array(masks)
         
@@ -189,6 +190,6 @@ for image_file in image_files:
         result_image = Image.alpha_composite(masked_image.convert('RGBA'), overlay_image)
 
         # Save the result image
-        output_path = f"Dataset/segmented/images/{image_file[:8]}.JPG"
+        output_path = f"Dataset/kitchen_segmented/images/{image_file[:8]}.JPG"
         result_image.convert('RGB').save(output_path)
-        print(f"{image_file} is finished")
+print(f"Total Time: {time.time() - start_time}")
