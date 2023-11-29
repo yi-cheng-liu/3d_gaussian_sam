@@ -1,0 +1,1 @@
+Namespace(data_device='cuda', eval=False, images='images', model_path='./output/4c142c85-f', resolution=4, sh_degree=3, source_path='/home/tienli/Desktop/3d_gaussian_sam/Dataset/france_segmented', white_background=False)
