@@ -1,5 +1,11 @@
 import cv2
-from segment_anything import build_sam, SamAutomaticMaskGenerator, SamPredictor, sam_model_registry
+import importlib
+segment_anything = importlib.import_module("segment-anything.segment_anything")
+build_sam = segment_anything.build_sam
+SamAutomaticMaskGenerator = segment_anything.SamAutomaticMaskGenerator
+SamPredictor = segment_anything.SamPredictor
+sam_model_registry = segment_anything.sam_model_registry
+
 from PIL import Image, ImageDraw
 import clip
 import torch

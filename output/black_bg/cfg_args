@@ -1,1 +1,0 @@
-Namespace(data_device='cuda', eval=False, images='images', model_path='./output/cc3c4c7d-f', resolution=-1, sh_degree=3, source_path='/home/liuyiche/Desktop/3d_gaussian_sam/Dataset/segmented', white_background=False)

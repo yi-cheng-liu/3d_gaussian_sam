@@ -1,4 +1,6 @@
 output/
 Dataset/
 *.pth
-a
+*.mp4
+colmap/
+nerfstudio/

@@ -336,7 +336,7 @@ if __name__ == "__main__":
     parser.add_argument("-i", "--input_folder", type=str, default="Dataset/kitchen/images_4", help="Path to the input image folder")
     parser.add_argument("-o", "--output_folder", type=str, default="Dataset/kitchen_segmented/images", help="Path to save the output images")
     parser.add_argument("-p", "--clip_prompt", type=str, default="bulldozer", help="Prompt text for CLIP model")
-    parser.add_argument("--sam_checkpoint", type=str, default="sam_vit_h_4b8939.pth", help="Path to the SAM checkpoint file")
+    parser.add_argument("--sam_checkpoint", type=str, default="segment-anything/model_checkpoint/sam_vit_h_4b8939.pth", help="Path to the SAM checkpoint file")
     parser.add_argument("--model_type", type=str, default="vit_h", help="Type of the model to use")
 
     args = parser.parse_args()
