@@ -7,6 +7,8 @@ import os
 import time
 import random
 import matplotlib.pyplot as plt
+import sys
+sys.path.insert(0, './segment-anything')
 from segment_anything import build_sam, SamAutomaticMaskGenerator, SamPredictor, sam_model_registry
 from PIL import Image, ImageDraw
 from typing import List
@@ -192,68 +194,33 @@ def main(args):
             previous_selected_point = np.array(selected_points)  # Update the previous_selected_point
 
 
-        ######################################### black
-        # # Load the original image
-        # original_image = Image.open(image_path)
-        # # original_image_array = np.array(original_image)
-        # original_image_array = np.array(original_image.convert('RGBA'))  # Ensure the image is RGBA
-        # alpha_channel = np.where(mask_array[-1], 255, 0)
-
-        # # Create a black background image
-        # black_background = np.zeros_like(original_image_array)
-
-        # # Apply the mask to the original image
-        # # masked_image_array = np.where(mask_array[-1, :, :, None], original_image_array, black_background)
-        # # masked_image = Image.fromarray(masked_image_array)
-        # masked_image_array = np.dstack((original_image_array[:, :, :3], alpha_channel)).astype(np.uint8)
-        # masked_image = Image.fromarray(masked_image_array)
-
-        # # Create an overlay image for the selected points
-        # overlay_image = Image.new('RGBA', original_image.size, (0, 0, 0, 0))
-        # draw = ImageDraw.Draw(overlay_image)
-        # # dot_color = (0, 255, 0, 255)  # Green color for dots
-        # # for point in selected_points:
-        # #     draw.ellipse((point[0] - 3, point[1] - 3, point[0] + 3, point[1] + 3), fill=dot_color)
-
-        # # Combine the overlay with the masked image
-        # # result_image = Image.alpha_composite(masked_image.convert('RGBA'), overlay_image)
-        # result_image = Image.alpha_composite(masked_image, overlay_image)
-        ######################################### black
-
-
-
-        ######################################### transparent
-        # Load the original image and convert it to RGBA (if it's not already)
+        # Transparent background        
         original_image = Image.open(image_path).convert('RGBA')
         original_image_array = np.array(original_image)
 
-        # Create a transparent background image (RGBA)
-        transparent_background = np.zeros_like(original_image_array)
-        transparent_background[..., 3] = 0  # Set alpha channel to 0 (fully transparent)
+        background = np.zeros_like(original_image_array) # transparent background
+        background[..., 3] = 0  # Set alpha channel to 0 (fully transparent)
 
         # Apply the mask to the original image
-        # Where the mask is true, copy the RGB values from the original image and set alpha to 255 (opaque)
-        masked_image_array = np.where(mask_array[-1, :, :, None], original_image_array, transparent_background)
-
-        # Convert the array back to an Image
+        # transparnent
+        masked_image_array = np.where(mask_array[-1, :, :, None], original_image_array, background)
+        # black
+        # alpha_channel = np.where(mask_array[-1], 255, 0)
+        # masked_image_array = np.dstack((masked_image_array[:, :, :3], alpha_channel)).astype(np.uint8) # black background
         masked_image = Image.fromarray(masked_image_array)
-
-        # Create an overlay image for the selected points
         overlay_image = Image.new('RGBA', original_image.size, (0, 0, 0, 0))
-        draw = ImageDraw.Draw(overlay_image)
-        # dot_color = (0, 255, 0, 255)  # Green color for dots
+        
+        # Draw mask
+        # draw = ImageDraw.Draw(overlay_image)
+        # dot_color = (0, 255, 0, 255)  # Example: Green color for dots
         # for point in selected_points:
         #     draw.ellipse((point[0] - 3, point[1] - 3, point[0] + 3, point[1] + 3), fill=dot_color)
-
-        # Combine the overlay with the masked image
         result_image = Image.alpha_composite(masked_image.convert('RGBA'), overlay_image)
-        ######################################### transparent
-
-
 
         # Save the result image
         output_path = f"{output_folder}/{image_file[:-4]}.JPG"
         result_image.convert('RGB').save(output_path)
+        
     print(f"Total Time: {time.time() - start_time}")
 
 
