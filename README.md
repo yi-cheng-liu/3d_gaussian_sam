@@ -1,9 +1,8 @@
 # 3D Gaussian Splatting SAM
 
 <p align="center">
-  <img src="https://github.com/yi-cheng-liu/3d_gaussian_sam/blob/master/.assets/bulldozer.gif" alt="gif">
+  <img src="https://github.com/yi-cheng-liu/3d_gaussian_sam/blob/main/.assets/bulldozer.gif" alt="gif">
 </p>
-
 This is the final project for EECS542: Advanced Topics for Computer Vision. 
 
 
