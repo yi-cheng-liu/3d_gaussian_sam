@@ -92,7 +92,7 @@ The structure of the projecct will look like this
 
 
 ** a new paper which addressed the task with better result
-+ [**SAGS**](https://github.com/Jumpat/SegAnyGAussians)
++ [**SAGA**](https://github.com/Jumpat/SegAnyGAussians)
 
 ## 📫 5. Contact
 
