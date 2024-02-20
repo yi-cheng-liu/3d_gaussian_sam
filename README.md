@@ -68,8 +68,8 @@ The structure of the project will look like this
 ├── Dataset
 │   ├── 360_extra_scenes
 │   ├── 360_v2
-    ├── Food-360
-│   ├── convert_video
+│   ├── Food-360
+│   └── convert_video
 ├── nerfstudio
 ├── output
 ├── README.md
