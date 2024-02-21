@@ -1,5 +1,5 @@
 output/
-Dataset/
+datasets/
 *.pth
 *.mp4
 colmap/

@@ -75,7 +75,7 @@ def get_bounding_box_from_mask(mask):
     if len(xs) == 0 or len(ys) == 0:
         return None
     # Get the bounding box coordinates
-    tune = 40
+    tune = 10
     x_min, x_max = np.min(xs), np.max(xs)
     y_min, y_max = np.min(ys), np.max(ys)
     x_min = max(x_min-tune, 0)
@@ -85,27 +85,20 @@ def get_bounding_box_from_mask(mask):
     return [x_min, y_min, x_max, y_max]
 
 def main(args):
-
-    sam_checkpoint = args.sam_checkpoint
-    model_type = args.model_type
-    source = args.input_folder
-    output_folder = args.output_folder
-
-    if not os.path.exists(output_folder):
-        os.makedirs(output_folder)
-
+    # Segment Anything
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    sam = sam_model_registry[model_type](checkpoint=sam_checkpoint)
+    print(f"Using {device}")
+    sam = sam_model_registry[args.model_type](checkpoint=args.sam_checkpoint)
     sam.to(device=device)
     mask_generator = SamAutomaticMaskGenerator(sam)
     predictor = SamPredictor(sam)
 
     # image sorce repository
-    image_files = sorted(os.listdir(source))
-
+    image_files = sorted(os.listdir(args.input_folder))
     start_time = time.time()
 
-    bounding_box = np.array([430, 170, 1275, 910])
+    # Adjust the bounding box
+    bounding_box = np.array([38, 371, 1039, 1497])
     skip_image = 0
 
     for i, image_file in enumerate(tqdm(image_files)):
@@ -113,7 +106,7 @@ def main(args):
             print(i * 5)
             continue
         image_file = image_files[i]
-        image_path = os.path.join(source, image_file)
+        image_path = os.path.join(args.input_folder, image_file)
         image = cv2.imread(image_path)
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
@@ -127,8 +120,8 @@ def main(args):
         )
 
         mask_array = np.array(masks)
-        new_bounding_box = get_bounding_box_from_mask(mask_array)
-        bounding_box = np.array(new_bounding_box)
+        # new_bounding_box = get_bounding_box_from_mask(mask_array)
+        # bounding_box = np.array(new_bounding_box)
 
         # Transparent background
         original_image = Image.open(image_path).convert('RGBA')
@@ -153,7 +146,7 @@ def main(args):
 
         # Save the result image
         result_image = Image.alpha_composite(masked_image.convert('RGBA'), overlay_image)
-        output_path = f"{output_folder}/{image_file[:-4]}.JPG"
+        output_path = f"{args.output_folder}/{image_file[:-4]}.JPG"
         result_image.convert('RGB').save(output_path)
 
     print(f"Total Time: {time.time() - start_time}")
@@ -162,11 +155,24 @@ def main(args):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Segmentation and Image Processing Script")
 
-    parser.add_argument("-i", "--input_folder", type=str, default="Dataset/360_v2/kitchen/images_8", help="Path to the input image folder")
-    parser.add_argument("-o", "--output_folder", type=str, default="Dataset/kitchen_segmented/images", help="Path to save the output images")
+    parser.add_argument("-i", "--input_folder", type=str, default="datasets/chips/chips/images", help="Path to the input image folder")
+    parser.add_argument("-o", "--output_folder", type=str, help="Path to save the output images")
     parser.add_argument("-p", "--clip_prompt", type=str, default="bulldozer", help="Prompt text for CLIP model")
     parser.add_argument("--sam_checkpoint", type=str, default="segment-anything/model_checkpoint/sam_vit_h_4b8939.pth", help="Path to the SAM checkpoint file")
     parser.add_argument("--model_type", type=str, default="vit_h", help="Type of the model to use")
 
     args = parser.parse_args()
+    
+    if args.output_folder is None:
+        base_path, last_folder = os.path.split(args.input_folder)
+        args.output_folder = os.path.join(base_path, f"{last_folder}_segmented")
+        print(f"Output is generated in folder: {args.output_folder}")
+    
+    if not os.path.exists(args.output_folder):
+        os.makedirs(args.output_folder)
+    
+    assert args.input_folder is not None, "Input folder must be specified."
+    assert args.sam_checkpoint is not None, "SAM checkpoint must be specified."
+    assert args.model_type is not None, "Model type must be specified."
+
     main(args)
