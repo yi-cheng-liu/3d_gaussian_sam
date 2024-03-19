@@ -125,7 +125,7 @@ python train.py -s datasets/chips/chips/images_segmented
 ** A new paper that addressed the task with a better result
 + [**SAGA**](https://github.com/Jumpat/SegAnyGAussians)
 
-## 📫 5. Contact
+## 📫 6. Contact
 
 + Tien-Li Lin, Email: tienli@umich.edu
 + Yi-Cheng Liu, Email: liuyiche@umich.edu
